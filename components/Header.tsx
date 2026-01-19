@@ -10,7 +10,7 @@ const Header = () => {
           <span className="material-symbols-outlined text-3xl">3d_rotation</span>
         </div>
         <h2 className="text-slate-900 dark:text-white text-lg font-bold leading-tight tracking-tight">
-          FilamentTracker
+          hermes
         </h2>
       </div>
       <div className="flex flex-1 justify-end gap-6 items-center">

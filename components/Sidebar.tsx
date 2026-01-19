@@ -24,10 +24,12 @@ const Sidebar = () => {
               <span className="material-symbols-outlined">inventory_2</span>
               <span className="text-sm font-medium">{t.menu.inventory}</span>
             </NavLink>
+            {/* 暂时隐藏打印记录 
             <NavLink to="/prints" className={({ isActive }) => isActive ? activeClass : inactiveClass}>
               <span className="material-symbols-outlined">print</span>
               <span className="text-sm font-medium">{t.menu.prints}</span>
             </NavLink>
+            */}
             <NavLink to="/settings" className={({ isActive }) => isActive ? activeClass : inactiveClass}>
               <span className="material-symbols-outlined">settings</span>
               <span className="text-sm font-medium">{t.menu.settings}</span>
@@ -36,21 +38,6 @@ const Sidebar = () => {
         </div>
         
         <div className="h-px bg-slate-200 dark:bg-border-dark w-full"></div>
-        
-        {/* Filters Section (Visual Only for now, could be functional) */}
-        <div>
-           <h3 className="text-slate-500 dark:text-slate-400 text-xs font-bold uppercase tracking-wider mb-3 px-3">
-            {t.dashboard.filterMaterial}
-          </h3>
-          <div className="flex flex-col gap-2 px-3">
-             {['PLA', 'PETG', 'ABS / ASA', 'TPU'].map(mat => (
-               <label key={mat} className="flex items-center gap-2 cursor-pointer group">
-                  <input type="checkbox" defaultChecked className="rounded border-slate-300 dark:border-slate-600 bg-transparent text-primary focus:ring-primary/50 focus:ring-offset-0 size-4" />
-                  <span className="text-sm text-slate-600 dark:text-slate-400 group-hover:text-primary transition-colors">{mat}</span>
-               </label>
-             ))}
-          </div>
-        </div>
 
         <div className="mt-auto">
              <button className={inactiveClass + " w-full"}>

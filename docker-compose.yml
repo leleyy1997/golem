@@ -1,14 +1,13 @@
 version: '3.8'
 
 services:
-  filamenttracker:
+  hermes:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: filamenttracker
+    container_name: hermes
     ports:
-      - "3000:3000"
-      - "3001:3001"
+      - "3001:3001" # 宿主机访问端口
     environment:
       - NODE_ENV=production
       - PORT=3001

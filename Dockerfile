@@ -15,6 +15,9 @@ COPY . .
 # 构建前端
 RUN npm run build
 
+# 构建后端
+RUN npx tsc -p tsconfig.server.json
+
 # 生产阶段
 FROM node:20-alpine
 
@@ -29,9 +32,8 @@ RUN npm ci --only=production
 # 从构建阶段复制构建好的前端文件
 COPY --from=builder /app/dist ./dist
 
-# 复制服务端代码
-COPY server ./server
-COPY tsconfig.json ./
+# 从构建阶段复制构建好的后端文件
+COPY --from=builder /app/dist-server ./dist-server
 
 # 创建数据目录
 RUN mkdir -p /app/data
@@ -49,4 +51,4 @@ HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
   CMD node -e "require('http').get('http://localhost:3001/health', (r) => {process.exit(r.statusCode === 200 ? 0 : 1)})"
 
 # 启动服务
-CMD ["sh", "-c", "node dist/server/index.js & npx serve -s dist -l 3000"]
+CMD ["node", "dist-server/index.js"]

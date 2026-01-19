@@ -44,7 +44,7 @@ const DashboardPage = () => {
     },
     {
       label: t.dashboard.lowStock,
-      value: filaments.filter(f => f.weightRemaining / f.weightTotal < 0.2).length.toString(),
+      value: filaments.filter(f => f.status === 'LowStock').length.toString(),
       icon: "warning",
       color: "text-slate-900 dark:text-white",
       iconColor: "text-orange-600 dark:text-orange-400",
@@ -152,7 +152,7 @@ const DashboardPage = () => {
           {filaments.map((filament) => {
             const percent = Math.round((filament.weightRemaining / filament.weightTotal) * 100);
             let barColor = "bg-primary";
-            if (percent < 20) barColor = "bg-orange-500";
+            if (filament.status === 'LowStock') barColor = "bg-orange-500";
             else if (percent > 90) barColor = "bg-green-500";
             else if (filament.name.includes("Gold")) barColor = "bg-yellow-500"; // Specific fix for mock data visual
 
@@ -198,12 +198,12 @@ const DashboardPage = () => {
                   <div className="mt-auto flex flex-col gap-2">
                     <div className="flex justify-between items-end">
                       <span className="text-xs text-slate-500 dark:text-slate-400 font-medium">{t.dashboard.remaining}</span>
-                      <span className={`text-sm font-bold ${percent < 20 ? 'text-orange-500' : 'text-slate-700 dark:text-slate-200'}`}>
+                      <span className={`text-sm font-bold ${filament.status === 'LowStock' ? 'text-orange-500' : 'text-slate-700 dark:text-slate-200'}`}>
                         {filament.weightRemaining}g <span className="text-slate-400 text-xs font-normal">/ {filament.weightTotal}g</span>
                       </span>
                     </div>
                     <div className="w-full bg-slate-100 dark:bg-slate-700 rounded-full h-2.5 overflow-hidden">
-                      <div className={`${barColor} h-2.5 rounded-full ${percent < 20 ? 'animate-pulse' : ''}`} style={{ width: `${percent}%` }}></div>
+                      <div className={`${barColor} h-2.5 rounded-full ${filament.status === 'LowStock' ? 'animate-pulse' : ''}`} style={{ width: `${percent}%` }}></div>
                     </div>
                   </div>
                 </div>

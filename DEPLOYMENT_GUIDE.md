@@ -1,4 +1,4 @@
-# FilamentTracker 部署完成指南
+# hermes 部署完成指南
 
 ## ✅ 已完成的工作
 
@@ -69,7 +69,7 @@ docker run --rm -v filament_data:/data -v $(pwd):/backup alpine \
 ## 📁 项目结构
 
 ```
-filamenttracker/
+hermes/
 ├── server/                 # 后端代码
 │   ├── index.ts           # 服务器入口
 │   ├── routes.ts          # API 路由

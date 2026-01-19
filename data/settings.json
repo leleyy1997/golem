@@ -1,8 +1,0 @@
-{
-  "language": "zh",
-  "autoDetect": true,
-  "inventoryAlerts": {
-    "enabled": true,
-    "threshold": 199
-  }
-}

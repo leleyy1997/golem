@@ -20,13 +20,32 @@ export function ensureDataDir() {
   }
 }
 
+// 计算状态
+function calculateStatus(remaining: number, total: number, settings: any): string {
+  const threshold = settings.inventoryAlerts.enabled ? settings.inventoryAlerts.threshold : 200;
+  return remaining <= threshold ? 'LowStock' : 'Adequate';
+}
+
 // 读取所有耗材数据
 export function readFilaments(): any[] {
   try {
     ensureDataDir();
     const content = fs.readFileSync(FILAMENTS_FILE, 'utf-8');
     const data = JSON.parse(content);
-    return data.filaments || [];
+    let filaments = data.filaments || [];
+
+    // 动态重新计算状态，以确保与当前设置一致
+    try {
+      const settings = readSettings();
+      filaments = filaments.map((f: any) => ({
+        ...f,
+        status: calculateStatus(f.weightRemaining, f.weightTotal, settings)
+      }));
+    } catch (e) {
+      console.warn('Failed to apply settings to filament status:', e);
+    }
+
+    return filaments;
   } catch (error) {
     console.error('Error reading filaments:', error);
     return [];
@@ -58,10 +77,12 @@ export function getFilamentById(id: string): any | null {
 // 添加耗材
 export function addFilament(filament: any): any | null {
   const filaments = readFilaments();
+  const settings = readSettings();
+  
   const newFilament = {
     ...filament,
     id: filament.id || Date.now().toString(),
-    status: filament.weightRemaining / filament.weightTotal < 0.2 ? 'LowStock' : 'Adequate'
+    status: calculateStatus(filament.weightRemaining, filament.weightTotal, settings)
   };
   filaments.push(newFilament);
 
@@ -80,11 +101,18 @@ export function updateFilament(id: string, updates: any): any | null {
     return null;
   }
 
-  filaments[index] = {
+  const settings = readSettings();
+  
+  const updatedFilament = {
     ...filaments[index],
     ...updates,
     id // 保持 ID 不变
   };
+
+  // 重新计算状态
+  updatedFilament.status = calculateStatus(updatedFilament.weightRemaining, updatedFilament.weightTotal, settings);
+
+  filaments[index] = updatedFilament;
 
   if (writeFilaments(filaments)) {
     return filaments[index];

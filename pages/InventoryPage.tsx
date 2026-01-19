@@ -10,11 +10,25 @@ const InventoryPage = () => {
   const [editingFilament, setEditingFilament] = useState<Filament | undefined>();
   const [filaments, setFilaments] = useState<Filament[]>([]);
   const [loading, setLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedBrand, setSelectedBrand] = useState('');
+  const [selectedMaterial, setSelectedMaterial] = useState('');
 
   // 加载数据
   useEffect(() => {
     loadFilaments();
   }, []);
+
+  const uniqueBrands = Array.from(new Set(filaments.map(f => f.brand))).sort();
+  const uniqueMaterials = Array.from(new Set(filaments.map(f => f.material))).sort();
+
+  const filteredFilaments = filaments.filter(f => {
+    const matchesSearch = f.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                          f.brand.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesBrand = selectedBrand ? f.brand === selectedBrand : true;
+    const matchesMaterial = selectedMaterial ? f.material === selectedMaterial : true;
+    return matchesSearch && matchesBrand && matchesMaterial;
+  });
 
   const loadFilaments = async () => {
     setLoading(true);
@@ -82,11 +96,19 @@ const InventoryPage = () => {
         <div className="flex flex-col md:flex-row gap-4 p-4 rounded-xl bg-white dark:bg-surface-dark border border-slate-200 dark:border-border-dark items-center">
             <div className="relative flex-1 w-full">
                 <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 material-symbols-outlined">search</span>
-                <input className="w-full bg-slate-50 dark:bg-background-dark border border-slate-200 dark:border-border-dark text-slate-900 dark:text-white text-sm rounded-lg h-10 pl-10 pr-4 focus:ring-1 focus:ring-primary focus:border-primary placeholder:text-slate-400" placeholder={t.dashboard.search} type="text"/>
+                <input 
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full bg-slate-50 dark:bg-background-dark border border-slate-200 dark:border-border-dark text-slate-900 dark:text-white text-sm rounded-lg h-10 pl-10 pr-4 focus:ring-1 focus:ring-primary focus:border-primary placeholder:text-slate-400" 
+                  placeholder={t.dashboard.search} 
+                  type="text"
+                />
             </div>
             <div className="flex items-center gap-2 w-full md:w-auto overflow-x-auto pb-1 md:pb-0">
                 <div className="relative">
                     <select
+                        value={selectedBrand}
+                        onChange={(e) => setSelectedBrand(e.target.value)}
                         className="bg-slate-50 dark:bg-background-dark border border-slate-200 dark:border-border-dark text-slate-700 dark:text-white text-sm rounded-lg h-10 pl-3 pr-8 min-w-[120px] focus:ring-primary focus:border-primary cursor-pointer [&::-webkit-calendar-picker-indicator]:hidden"
                         style={{
                           WebkitAppearance: 'none',
@@ -95,7 +117,10 @@ const InventoryPage = () => {
                           backgroundImage: 'none'
                         }}
                     >
-                        <option>{t.dashboard.filterBrand}</option>
+                        <option value="">{t.dashboard.filterBrand}</option>
+                        {uniqueBrands.map(brand => (
+                          <option key={brand} value={brand}>{brand}</option>
+                        ))}
                     </select>
                     <span className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none text-slate-500">
                         <span className="material-symbols-outlined text-lg">expand_more</span>
@@ -103,6 +128,8 @@ const InventoryPage = () => {
                 </div>
                  <div className="relative">
                     <select
+                        value={selectedMaterial}
+                        onChange={(e) => setSelectedMaterial(e.target.value)}
                         className="bg-slate-50 dark:bg-background-dark border border-slate-200 dark:border-border-dark text-slate-700 dark:text-white text-sm rounded-lg h-10 pl-3 pr-8 min-w-[120px] focus:ring-primary focus:border-primary cursor-pointer [&::-webkit-calendar-picker-indicator]:hidden"
                         style={{
                           WebkitAppearance: 'none',
@@ -111,7 +138,10 @@ const InventoryPage = () => {
                           backgroundImage: 'none'
                         }}
                     >
-                        <option>{t.dashboard.filterMaterial}</option>
+                        <option value="">{t.dashboard.filterMaterial}</option>
+                        {uniqueMaterials.map(material => (
+                          <option key={material} value={material}>{material}</option>
+                        ))}
                     </select>
                     <span className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none text-slate-500">
                         <span className="material-symbols-outlined text-lg">expand_more</span>
@@ -142,7 +172,7 @@ const InventoryPage = () => {
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-slate-200 dark:divide-border-dark">
-                        {filaments.map((f) => {
+                        {filteredFilaments.map((f) => {
                              const percent = Math.round((f.weightRemaining / f.weightTotal) * 100);
                              let badgeClass = "bg-slate-100 text-slate-600 border-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:border-slate-700";
                              if (f.material === 'PLA') badgeClass = "bg-blue-50 text-blue-600 border-blue-200 dark:bg-blue-500/10 dark:text-blue-400 dark:border-blue-500/20";
