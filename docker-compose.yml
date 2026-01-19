@@ -2,19 +2,13 @@ version: '3.8'
 
 services:
   hermes:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: hermes:latest
     container_name: hermes
     ports:
       - "3001:3001" # 宿主机访问端口
-    environment:
-      - NODE_ENV=production
-      - PORT=3001
-      - DATA_DIR=/app/data
     volumes:
       # 挂载数据目录，实现数据持久化
-      - filament_data:/app/data
+      - ./data:/app/data
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "node", "-e", "require('http').get('http://localhost:3001/health', (r) => {process.exit(r.statusCode === 200 ? 0 : 1)})"]
@@ -22,7 +16,3 @@ services:
       timeout: 10s
       retries: 3
       start_period: 40s
-
-volumes:
-  filament_data:
-    driver: local
