@@ -13,6 +13,15 @@ interface Filament {
   status: string;
 }
 
+interface Settings {
+  language: string;
+  autoDetect: boolean;
+  inventoryAlerts: {
+    enabled: boolean;
+    threshold: number;
+  };
+}
+
 // 获取所有耗材
 export async function fetchFilaments(): Promise<Filament[]> {
   try {
@@ -96,5 +105,51 @@ export async function deleteFilament(id: string): Promise<boolean> {
   } catch (error) {
     console.error('Error deleting filament:', error);
     return false;
+  }
+}
+
+// ============ 设置相关 API ============
+
+// 获取设置
+export async function fetchSettings(): Promise<Settings | null> {
+  try {
+    const response = await fetch(`${API_BASE}/settings`);
+    const result = await response.json();
+    if (result.success) {
+      return result.data;
+    }
+    return null;
+  } catch (error) {
+    console.error('Error fetching settings:', error);
+    return null;
+  }
+}
+
+// 保存设置
+export async function saveSettings(settings: Settings): Promise<Settings | null> {
+  try {
+    const response = await fetch(`${API_BASE}/settings`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(settings),
+    });
+
+    if (!response.ok) {
+      console.error('Save settings failed:', response.status, response.statusText);
+      const text = await response.text();
+      console.error('Response:', text);
+      return null;
+    }
+
+    const result = await response.json();
+    if (result.success) {
+      return result.data;
+    }
+    return null;
+  } catch (error) {
+    console.error('Error saving settings:', error);
+    return null;
   }
 }

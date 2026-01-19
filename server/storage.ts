@@ -3,6 +3,7 @@ import path from 'path';
 
 const DATA_DIR = process.env.DATA_DIR || path.join(process.cwd(), 'data');
 const FILAMENTS_FILE = path.join(DATA_DIR, 'filaments.json');
+const SETTINGS_FILE = path.join(DATA_DIR, 'settings.json');
 
 // 确保数据目录存在
 export function ensureDataDir() {
@@ -101,4 +102,56 @@ export function deleteFilament(id: string): boolean {
   }
 
   return writeFilaments(filteredFilaments);
+}
+
+// ============ 设置相关函数 ============
+
+// 默认设置配置
+const defaultSettings = {
+  language: 'en',
+  autoDetect: false,
+  inventoryAlerts: {
+    enabled: true,
+    threshold: 200
+  }
+};
+
+// 读取设置
+export function readSettings(): any {
+  try {
+    ensureDataDir();
+
+    if (!fs.existsSync(SETTINGS_FILE)) {
+      writeSettings(defaultSettings);
+      return defaultSettings;
+    }
+
+    const content = fs.readFileSync(SETTINGS_FILE, 'utf-8');
+    const savedSettings = JSON.parse(content);
+
+    // 合并默认设置和保存的设置，确保新字段存在
+    return {
+      ...defaultSettings,
+      ...savedSettings,
+      inventoryAlerts: {
+        ...defaultSettings.inventoryAlerts,
+        ...savedSettings.inventoryAlerts
+      }
+    };
+  } catch (error) {
+    console.error('Error reading settings:', error);
+    return defaultSettings;
+  }
+}
+
+// 写入设置
+export function writeSettings(settings: any): boolean {
+  try {
+    ensureDataDir();
+    fs.writeFileSync(SETTINGS_FILE, JSON.stringify(settings, null, 2));
+    return true;
+  } catch (error) {
+    console.error('Error writing settings:', error);
+    return false;
+  }
 }

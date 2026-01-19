@@ -19,6 +19,17 @@ export interface Filament {
   status: FilamentStatus;
 }
 
+export interface InventoryAlerts {
+  enabled: boolean;
+  threshold: number; // in grams
+}
+
+export interface Settings {
+  language: Language;
+  autoDetect: boolean;
+  inventoryAlerts: InventoryAlerts;
+}
+
 export interface Translation {
   menu: {
     title: string;

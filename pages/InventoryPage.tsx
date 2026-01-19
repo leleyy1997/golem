@@ -129,8 +129,8 @@ const InventoryPage = () => {
                 <table className="w-full text-left border-collapse">
                     <thead>
                         <tr className="bg-slate-50 dark:bg-surface-dark border-b border-slate-200 dark:border-border-dark text-slate-500 dark:text-text-secondary text-xs uppercase tracking-wider font-semibold">
-                            <th className="p-4 w-12 text-center">
-                                <input type="checkbox" className="rounded border-slate-300 dark:border-border-dark bg-white dark:bg-background-dark text-primary focus:ring-0 focus:ring-offset-0 size-4" />
+                            <th className="p-4 w-12 flex items-center justify-center">
+                                <input type="checkbox" className="rounded border-slate-200 dark:border-slate-700 bg-white dark:bg-background-dark text-primary focus:ring-0 focus:ring-offset-0 size-4" />
                             </th>
                             <th className="p-4 font-medium">{t.inventory.table.spool}</th>
                             <th className="p-4 font-medium min-w-[140px]">{t.inventory.table.nameBrand}</th>
@@ -138,7 +138,7 @@ const InventoryPage = () => {
                             <th className="p-4 font-medium">{t.inventory.table.color}</th>
                             <th className="p-4 font-medium">{t.inventory.table.weight}</th>
                             <th className="p-4 font-medium">{t.inventory.table.status}</th>
-                            <th className="p-4 font-medium text-right">{t.inventory.table.actions}</th>
+                            <th className="p-4 font-medium text-center">{t.inventory.table.actions}</th>
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-slate-200 dark:divide-border-dark">
@@ -162,8 +162,8 @@ const InventoryPage = () => {
 
                             return (
                                 <tr key={f.id} className="group hover:bg-slate-50 dark:hover:bg-surface-dark/50 transition-colors">
-                                    <td className="p-4 text-center">
-                                        <input type="checkbox" className="rounded border-slate-300 dark:border-border-dark bg-white dark:bg-background-dark text-primary focus:ring-0 focus:ring-offset-0 size-4" />
+                                    <td className="p-4 flex items-center justify-center">
+                                        <input type="checkbox" className="rounded border-slate-200 dark:border-slate-700 bg-white dark:bg-background-dark text-primary focus:ring-0 focus:ring-offset-0 size-4" />
                                     </td>
                                     <td className="p-4">
                                         <div className="size-12 rounded-lg bg-cover bg-center border border-slate-200 dark:border-border-dark" style={{ backgroundImage: `url(${f.imageUrl})` }}></div>
@@ -203,11 +203,11 @@ const InventoryPage = () => {
                                         <div className="flex items-center justify-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                                             <button
                                               onClick={() => handleEdit(f)}
-                                              className="p-2 rounded-lg bg-white dark:bg-surface-dark border border-slate-200 dark:border-slate-600 text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors shadow-sm"
+                                              className="p-2 rounded-lg bg-white dark:bg-surface-dark border border-slate-200 dark:border-slate-600 flex items-center justify-center text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors shadow-sm"
                                             >
                                                 <span className="material-symbols-outlined text-[20px]">edit</span>
                                             </button>
-                                            <button className="p-2 rounded-lg bg-white dark:bg-surface-dark border border-slate-200 dark:border-slate-600 text-slate-700 dark:text-slate-200 hover:bg-red-50 dark:hover:bg-red-500/20 hover:text-red-600 dark:hover:text-red-400 transition-colors shadow-sm">
+                                            <button className="p-2 rounded-lg bg-white dark:bg-surface-dark border border-slate-200 dark:border-slate-600 flex items-center justify-center text-slate-700 dark:text-slate-200 hover:bg-red-50 dark:hover:bg-red-500/20 hover:text-red-600 dark:hover:text-red-400 transition-colors shadow-sm">
                                                 <span className="material-symbols-outlined text-[20px]">delete</span>
                                             </button>
                                         </div>

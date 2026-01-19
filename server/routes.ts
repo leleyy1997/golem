@@ -4,7 +4,9 @@ import {
   getFilamentById,
   addFilament,
   updateFilament,
-  deleteFilament
+  deleteFilament,
+  readSettings,
+  writeSettings
 } from './storage.js';
 
 const router = express.Router();
@@ -68,6 +70,32 @@ router.delete('/filaments/:id', (req, res) => {
     res.json({ success: true, message: 'Filament deleted successfully' });
   } catch (error) {
     res.status(500).json({ success: false, error: 'Failed to delete filament' });
+  }
+});
+
+// ============ 设置相关路由 ============
+
+// GET /api/settings - 获取设置
+router.get('/settings', (req, res) => {
+  try {
+    const settings = readSettings();
+    res.json({ success: true, data: settings });
+  } catch (error) {
+    res.status(500).json({ success: false, error: 'Failed to fetch settings' });
+  }
+});
+
+// POST /api/settings - 更新设置
+router.post('/settings', (req, res) => {
+  try {
+    const success = writeSettings(req.body);
+    if (!success) {
+      return res.status(500).json({ success: false, error: 'Failed to save settings' });
+    }
+    const settings = readSettings();
+    res.json({ success: true, data: settings });
+  } catch (error) {
+    res.status(500).json({ success: false, error: 'Failed to save settings' });
   }
 });
 
