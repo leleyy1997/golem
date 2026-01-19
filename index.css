@@ -1,0 +1,68 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+
+.dark ::-webkit-scrollbar-track {
+  background: #101922;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: #3b4754;
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: #4b5563;
+}
+
+/* Material Symbols Outlined */
+.material-symbols-outlined {
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
+
+.material-symbols-outlined.fill {
+  font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
+
+/* Body font */
+body {
+  font-family: 'Inter', 'Noto Sans SC', sans-serif;
+}
+
+/* Hide default select arrow */
+select {
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+  appearance: none !important;
+  background-image: none !important;
+}
+
+/* For IE */
+select::-ms-expand {
+  display: none !important;
+}
+
+/* For Firefox */
+select::-webkit-scrollbar {
+  display: none;
+}
+
+/* Additional: Remove any default arrows from all browsers */
+select::-ms-value {
+  background: transparent;
+  color: inherit;
+}
