@@ -20,8 +20,8 @@ export default {
         "text-secondary": "#9dabb9",
       },
       fontFamily: {
-        display: ["Inter", "Noto Sans SC", "sans-serif"],
-        body: ["Inter", "Noto Sans SC", "sans-serif"],
+        display: ["Inter", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "sans-serif"],
+        body: ["Inter", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "sans-serif"],
       },
     },
   },

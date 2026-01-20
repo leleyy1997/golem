@@ -33,7 +33,7 @@ const Header = () => {
         
         <div
           className="bg-center bg-no-repeat bg-cover rounded-full size-9 ring-2 ring-white dark:ring-border-dark cursor-pointer"
-          style={{ backgroundImage: 'url("https://lh3.googleusercontent.com/aida-public/AB6AXuAmzl41JC57aDEnbCeDGZFj7AmLf3pBbCuObXv2ndzXjzxvg3xMZgkHipcDGPw8EbWyGMIXLu-avHy-Tthj21WGnSnIiMx0IciCEYDuzI0L5y51kkEZwHQoLIbZGlx35YsUQ2lLmBwdl8FgfdC0qMxf7V1ncxGNe0K6LFisy4S-ddOVRcnAohZkCsHkq5s3teVjujJ2T2zJQIN00XqJvtH8NBUSTI7vTmnRjU1_dF0X1dPUnyC4k5JsmgcInBslrQfBPDs27eVp7xQg")' }}
+          style={{ backgroundImage: 'url("https://gravatar.loli.net/avatar/00000000000000000000000000000000?d=mp")' }}
         ></div>
       </div>
     </header>
