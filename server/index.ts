@@ -3,6 +3,7 @@ import cors from 'cors';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import routes from './routes.js';
+import { initialize } from './storage-new.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -39,7 +40,20 @@ app.get('/health', (req, res) => {
 });
 
 // 启动服务器
-app.listen(PORT, () => {
-  console.log(`🚀 Server is running on http://localhost:${PORT}`);
-  console.log(`📁 Data directory: ${process.env.DATA_DIR || './data'}`);
-});
+async function startServer() {
+  try {
+    // 初始化存储
+    await initialize();
+    console.log('✅ Storage initialized');
+
+    app.listen(PORT, () => {
+      console.log(`🚀 Server is running on http://localhost:${PORT}`);
+      console.log(`📁 Data directory: ${process.env.DATA_DIR || './data'}`);
+    });
+  } catch (error) {
+    console.error('❌ Failed to start server:', error);
+    process.exit(1);
+  }
+}
+
+startServer();
