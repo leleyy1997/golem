@@ -1,0 +1,154 @@
+name: Build and Push Docker Image
+
+on:
+  push:
+    branches:
+      - main
+    # 路径过滤：只有这些文件变化时才构建
+    paths:
+      - 'src/**'
+      - 'lib/**'
+      - 'public/**'
+      - 'package*.json'
+      - 'tsconfig*.json'
+      - 'Dockerfile'
+      - '.dockerignore'
+      - '.github/workflows/docker-publish.yml'
+    tags:
+      - 'v*.*.*'
+  workflow_dispatch:  # 允许手动触发
+    inputs:
+      version:
+        description: '版本号 (留空自动递增，或指定如 1.2.3)'
+        required: false
+        type: string
+
+env:
+  IMAGE_NAME: legege1997/golem
+  REGISTRY: docker.io
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    # 仅在 GitHub.com 上执行，排除 Gitea 等其他 Git 托管平台
+    if: github.server_url == 'https://github.com'
+
+    permissions:
+      contents: read
+      packages: write
+      contents: write  # 需要写权限来更新版本号
+
+    steps:
+      - name: Checkout 代码
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}  # 用于提交版本更新
+
+      - name: 设置 Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: 登录到 Docker Hub
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: 获取并递增版本号
+        id: version
+        run: |
+          # 获取当前版本号
+          CURRENT_VERSION=$(node -p "require('./package.json').version")
+
+          if [ -n "${{ github.event.inputs.version }}" ]; then
+            # 手动指定版本号
+            NEW_VERSION="${{ github.event.inputs.version }}"
+          else
+            # 自动递增版本号 (递增最后一位)
+            IFS='.' read -r MAJOR MINOR PATCH <<< "$CURRENT_VERSION"
+            NEW_PATCH=$((PATCH + 1))
+            NEW_VERSION="$MAJOR.$MINOR.$NEW_PATCH"
+          fi
+
+          echo "当前版本: $CURRENT_VERSION"
+          echo "新版本: $NEW_VERSION"
+
+          # 保存到输出
+          echo "version=$NEW_VERSION" >> $GITHUB_OUTPUT
+          echo "prev_version=$CURRENT_VERSION" >> $GITHUB_OUTPUT
+
+      - name: 更新 package.json 版本号
+        run: |
+          npm version ${{ steps.version.outputs.version }} --no-git-tag-version
+
+      - name: 提交版本更新
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add package.json
+          git commit -m "chore: bump version to ${{ steps.version.outputs.version }}"
+          git push
+
+      - name: 创建 Git 标签
+        run: |
+          git tag -a v${{ steps.version.outputs.version }} -m "Release v${{ steps.version.outputs.version }}"
+          git push origin v${{ steps.version.outputs.version }}
+
+      - name: 提取元数据（标签等）
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=semver,pattern={{version}},value=${{ steps.version.outputs.version }}
+            type=semver,pattern={{major}}.{{minor}},value=${{ steps.version.outputs.version }}
+            type=raw,value=latest
+
+      - name: 构建并推送 Docker 镜像
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          build-args: |
+            VERSION=${{ steps.version.outputs.version }}
+            BUILD_DATE=$(date -u +'%Y-%m-%dT%H:%M:%SZ')
+            VCS_REF=${{ github.sha }}
+
+      - name: 镜像推送成功
+        run: |
+          echo "✅ Docker 镜像已成功推送！"
+          echo "🏷️  版本: ${{ steps.version.outputs.version }}"
+          echo "📦 标签: ${{ steps.meta.outputs.tags }}"
+          echo ""
+          echo "拉取命令:"
+          echo "  docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.version.outputs.version }}"
+          echo "  docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest"
+
+      - name: 创建 GitHub Release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v${{ steps.version.outputs.version }}
+          release_name: Release v${{ steps.version.outputs.version }}
+          body: |
+            ## Changes in v${{ steps.version.outputs.version }}
+
+            Docker 镜像已发布：
+            - `legege1997/golem:${{ steps.version.outputs.version }}`
+            - `legege1997/golem:latest`
+
+            ### 快速部署
+            ```bash
+            docker pull legege1997/golem:${{ steps.version.outputs.version }}
+            docker-compose pull
+            docker-compose up -d
+            ```
+          draft: false
+          prerelease: false
