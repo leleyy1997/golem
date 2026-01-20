@@ -1,11 +1,11 @@
 version: '3.8'
 
 services:
-  hermes:
-    image: hermes:latest
-    container_name: hermes
+  golem:
+    image: golem:latest
+    container_name: golem
     ports:
-      - "3001:3001" # 宿主机访问端口
+      - "3001:3001" 
     volumes:
       # 挂载数据目录，实现数据持久化
       - ./data:/app/data
