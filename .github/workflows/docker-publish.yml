@@ -35,9 +35,8 @@ jobs:
     if: github.server_url == 'https://github.com'
 
     permissions:
-      contents: read
+      contents: write
       packages: write
-      contents: write  # 需要写权限来更新版本号
 
     steps:
       - name: Checkout 代码
