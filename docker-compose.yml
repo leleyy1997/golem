@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   golem:
-    image: golem:latest
+    image: legege1997/golem:latest
     container_name: golem
     ports:
       - "3001:3001"
