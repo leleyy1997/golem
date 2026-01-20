@@ -159,7 +159,6 @@ npm run preview
 | 变量名 | 说明 | 默认值 | 必需 |
 |--------|------|--------|------|
 | `APP_PASSWORD` | 应用访问密码 | `golem` | 否 |
-| `GEMINI_API_KEY` | Gemini API 密钥 | - | 是 |
 | `PORT` | 应用端口 | `3001` | 否 |
 | `NODE_ENV` | 运行环境 | `production` | 否 |
 | `DATA_DIR` | 数据存储目录 | `/app/data` | 否 |
