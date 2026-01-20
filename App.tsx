@@ -5,7 +5,16 @@ import Header from './components/Header';
 import DashboardPage from './pages/DashboardPage';
 import InventoryPage from './pages/InventoryPage';
 import SettingsPage from './pages/SettingsPage';
+import LoginPage from './pages/LoginPage';
 import { I18nProvider } from './i18n';
+import { isAuthenticated } from './lib/api';
+
+const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
+  if (!isAuthenticated()) {
+    return <Navigate to="/login" replace />;
+  }
+  return <>{children}</>;
+};
 
 const Layout = ({ children }: { children?: React.ReactNode }) => {
   return (
@@ -25,15 +34,50 @@ const App = () => {
   return (
     <I18nProvider>
       <HashRouter>
-        <Layout>
-          <Routes>
-            <Route path="/" element={<DashboardPage />} />
-            <Route path="/inventory" element={<InventoryPage />} />
-            <Route path="/prints" element={<div className="p-8 text-center text-slate-500">Prints Page Placeholder</div>} />
-            <Route path="/settings" element={<SettingsPage />} />
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </Routes>
-        </Layout>
+        <Routes>
+          <Route path="/login" element={<LoginPage />} />
+          <Route
+            path="/"
+            element={
+              <ProtectedRoute>
+                <Layout>
+                  <DashboardPage />
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/inventory"
+            element={
+              <ProtectedRoute>
+                <Layout>
+                  <InventoryPage />
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/prints"
+            element={
+              <ProtectedRoute>
+                <Layout>
+                  <div className="p-8 text-center text-slate-500">Prints Page Placeholder</div>
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/settings"
+            element={
+              <ProtectedRoute>
+                <Layout>
+                  <SettingsPage />
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
       </HashRouter>
     </I18nProvider>
   );

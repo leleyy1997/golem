@@ -22,10 +22,68 @@ interface Settings {
   };
 }
 
+interface LoginResponse {
+  token: string;
+  username: string;
+}
+
+// 获取认证 token
+function getAuthToken(): string | null {
+  return localStorage.getItem('auth_token');
+}
+
+// 获取认证 headers
+function getAuthHeaders(): HeadersInit {
+  const token = getAuthToken();
+  const headers: HeadersInit = {
+    'Content-Type': 'application/json',
+  };
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
+  }
+  return headers;
+}
+
+// ============ 认证相关 API ============
+
+// 登录
+export async function login(password: string): Promise<LoginResponse | null> {
+  try {
+    const response = await fetch(`${API_BASE}/login`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ password }),
+    });
+    const result = await response.json();
+    if (result.success) {
+      return result.data;
+    }
+    return null;
+  } catch (error) {
+    console.error('Error logging in:', error);
+    return null;
+  }
+}
+
+// 登出
+export function logout(): void {
+  localStorage.removeItem('auth_token');
+  localStorage.removeItem('username');
+}
+
+// 检查是否已登录
+export function isAuthenticated(): boolean {
+  return !!getAuthToken();
+}
+
 // 获取所有耗材
 export async function fetchFilaments(): Promise<Filament[]> {
   try {
-    const response = await fetch(`${API_BASE}/filaments`);
+    const response = await fetch(`${API_BASE}/filaments`, {
+      headers: getAuthHeaders(),
+    });
     const result = await response.json();
     if (result.success) {
       return result.data;
@@ -40,7 +98,9 @@ export async function fetchFilaments(): Promise<Filament[]> {
 // 获取单个耗材
 export async function fetchFilament(id: string): Promise<Filament | null> {
   try {
-    const response = await fetch(`${API_BASE}/filaments/${id}`);
+    const response = await fetch(`${API_BASE}/filaments/${id}`, {
+      headers: getAuthHeaders(),
+    });
     const result = await response.json();
     if (result.success) {
       return result.data;
@@ -57,9 +117,7 @@ export async function createFilament(filament: Omit<Filament, 'id' | 'status'>):
   try {
     const response = await fetch(`${API_BASE}/filaments`, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: getAuthHeaders(),
       body: JSON.stringify(filament),
     });
     const result = await response.json();
@@ -78,9 +136,7 @@ export async function updateFilament(id: string, updates: Partial<Filament>): Pr
   try {
     const response = await fetch(`${API_BASE}/filaments/${id}`, {
       method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: getAuthHeaders(),
       body: JSON.stringify(updates),
     });
     const result = await response.json();
@@ -99,6 +155,7 @@ export async function deleteFilament(id: string): Promise<boolean> {
   try {
     const response = await fetch(`${API_BASE}/filaments/${id}`, {
       method: 'DELETE',
+      headers: getAuthHeaders(),
     });
     const result = await response.json();
     return result.success;
@@ -113,7 +170,9 @@ export async function deleteFilament(id: string): Promise<boolean> {
 // 获取设置
 export async function fetchSettings(): Promise<Settings | null> {
   try {
-    const response = await fetch(`${API_BASE}/settings`);
+    const response = await fetch(`${API_BASE}/settings`, {
+      headers: getAuthHeaders(),
+    });
     const result = await response.json();
     if (result.success) {
       return result.data;
@@ -130,9 +189,7 @@ export async function saveSettings(settings: Settings): Promise<Settings | null>
   try {
     const response = await fetch(`${API_BASE}/settings`, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: getAuthHeaders(),
       body: JSON.stringify(settings),
     });
 

@@ -6,11 +6,11 @@ const Header = () => {
   return (
     <header className="flex items-center justify-between whitespace-nowrap border-b border-solid border-border-light dark:border-border-dark bg-white dark:bg-background-dark px-6 py-3 z-20 shrink-0">
       <div className="flex items-center gap-4">
-        <div className="size-8 text-primary flex items-center justify-center">
-          <span className="material-symbols-outlined text-3xl">3d_rotation</span>
+        <div className="size-8 flex items-center justify-center">
+          <img src="/favicon.svg" alt="Golem Logo" className="w-full h-full" />
         </div>
         <h2 className="text-slate-900 dark:text-white text-lg font-bold leading-tight tracking-tight">
-          golem
+          Golem
         </h2>
       </div>
       <div className="flex flex-1 justify-end gap-6 items-center">

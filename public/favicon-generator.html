@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Favicon Generator</title>
+</head>
+<body>
+  <h2>Favicon Generator</h2>
+  <p>Open this file in a browser, it will generate and download favicon.ico</p>
+  <canvas id="canvas" width="32" height="32"></canvas>
+
+  <script>
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+
+    // Draw background circle
+    ctx.fillStyle = 'rgba(59, 130, 246, 0.2)';
+    ctx.beginPath();
+    ctx.arc(16, 16, 14, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Draw outer ring
+    ctx.strokeStyle = '#3b82f6';
+    ctx.lineWidth = 2.5;
+    ctx.beginPath();
+    ctx.arc(16, 16, 11, 0, Math.PI * 2);
+    ctx.stroke();
+
+    // Draw inner ring
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.arc(16, 16, 5, 0, Math.PI * 2);
+    ctx.stroke();
+
+    // Draw filament strand
+    ctx.strokeStyle = '#8b5cf6';
+    ctx.lineWidth = 2;
+    ctx.lineCap = 'round';
+    ctx.beginPath();
+    ctx.moveTo(16, 5);
+    ctx.quadraticCurveTo(24, 8, 26, 16);
+    ctx.stroke();
+
+    // Draw filament end point
+    ctx.fillStyle = '#3b82f6';
+    ctx.beginPath();
+    ctx.arc(26, 16, 1.5, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Convert to ICO and download
+    canvas.toBlob(function(blob) {
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'favicon.ico';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+
+      document.body.innerHTML += '<p style="color: green;">✓ favicon.ico downloaded! You can close this page.</p>';
+    });
+  </script>
+</body>
+</html>

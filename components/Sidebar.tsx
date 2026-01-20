@@ -1,9 +1,16 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { useI18n } from '../i18n';
+import { logout } from '../lib/api';
 
 const Sidebar = () => {
   const { t } = useI18n();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
+  };
 
   const activeClass = "flex items-center gap-3 px-3 py-2.5 rounded-lg bg-primary/10 text-primary transition-colors";
   const inactiveClass = "flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-surface-light dark:hover:bg-surface-dark hover:text-slate-900 dark:hover:text-white transition-colors";
@@ -24,7 +31,7 @@ const Sidebar = () => {
               <span className="material-symbols-outlined">inventory_2</span>
               <span className="text-sm font-medium">{t.menu.inventory}</span>
             </NavLink>
-            {/* 暂时隐藏打印记录 
+            {/* 暂时隐藏打印记录
             <NavLink to="/prints" className={({ isActive }) => isActive ? activeClass : inactiveClass}>
               <span className="material-symbols-outlined">print</span>
               <span className="text-sm font-medium">{t.menu.prints}</span>
@@ -36,11 +43,11 @@ const Sidebar = () => {
             </NavLink>
           </nav>
         </div>
-        
+
         <div className="h-px bg-slate-200 dark:bg-border-dark w-full"></div>
 
         <div className="mt-auto">
-             <button className={inactiveClass + " w-full"}>
+             <button onClick={handleLogout} className={inactiveClass + " w-full"}>
                 <span className="material-symbols-outlined">logout</span>
                 <span className="text-sm font-medium">{t.menu.logout}</span>
              </button>
