@@ -150,6 +150,25 @@ export async function updateFilament(id: string, updates: Partial<Filament>): Pr
   }
 }
 
+// 扣减耗材重量
+export async function deductFilamentWeight(id: string, amount: number): Promise<Filament | null> {
+  try {
+    const response = await fetch(`${API_BASE}/filaments/${id}/deduct`, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+      body: JSON.stringify({ amount }),
+    });
+    const result = await response.json();
+    if (result.success) {
+      return result.data;
+    }
+    return null;
+  } catch (error) {
+    console.error('Error deducting filament weight:', error);
+    return null;
+  }
+}
+
 // 删除耗材
 export async function deleteFilament(id: string): Promise<boolean> {
   try {

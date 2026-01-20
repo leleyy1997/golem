@@ -43,7 +43,7 @@ const FilamentModal: React.FC<FilamentModalProps> = ({ isOpen, onClose, onSave, 
         notes: ''
       });
       // Check if brand is not in the predefined list
-      const predefinedBrands = ['Prusament', 'eSun', 'Polymaker', 'Overture', 'Hatchbox', 'Generic'];
+      const predefinedBrands = ['Prusament', 'eSun', 'Polymaker', 'Overture', 'Hatchbox', 'Generic', 'Bambu Lab', 'R3D', 'Sanlu', 'Raise3D', 'Creality', 'Anycubic', 'Tiertime', 'ColorFabb', 'MatterHackers'];
       setIsCustomBrand(!predefinedBrands.includes(filament.brand));
     } else {
       setFormData({
@@ -288,10 +288,19 @@ const FilamentModal: React.FC<FilamentModalProps> = ({ isOpen, onClose, onSave, 
                         >
                           <option value="">{t.modal.selectBrand}</option>
                           <option value="Prusament">Prusament</option>
+                          <option value="Bambu Lab">Bambu Lab</option>
                           <option value="eSun">eSun</option>
                           <option value="Polymaker">Polymaker</option>
                           <option value="Overture">Overture</option>
                           <option value="Hatchbox">Hatchbox</option>
+                          <option value="Creality">Creality</option>
+                          <option value="Anycubic">Anycubic</option>
+                          <option value="R3D">R3D</option>
+                          <option value="Sanlu">Sanlu (三绿)</option>
+                          <option value="Raise3D">Raise3D</option>
+                          <option value="Tiertime">Tiertime</option>
+                          <option value="ColorFabb">ColorFabb</option>
+                          <option value="MatterHackers">MatterHackers</option>
                           <option value="Generic">Generic</option>
                           <option value="custom">+ Custom Brand</option>
                         </select>

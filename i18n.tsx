@@ -86,6 +86,18 @@ const translations: Record<Language, Translation> = {
       currentWeight: "Current Weight (g)",
       usageNotes: "Usage Notes",
       usageNotesPlaceholder: "e.g. Prints best at 215°C, requires glue stick...",
+    },
+    deduct: {
+      title: "Deduct Weight",
+      currentWeight: "Current Weight",
+      afterDeduction: "After Deduction",
+      remaining: "Remaining",
+      quickSelect: "Quick Select",
+      deductAmount: "Deduct Amount (grams)",
+      deductAmountPlaceholder: "Enter amount to deduct",
+      cancel: "Cancel",
+      confirm: "Deduct",
+      quickDeduct: "Quick Deduct",
     }
   },
   zh: {
@@ -172,6 +184,18 @@ const translations: Record<Language, Translation> = {
       currentWeight: "当前重量 (g)",
       usageNotes: "使用备注",
       usageNotesPlaceholder: "例如：最佳打印温度 215°C，纹理板需使用胶棒。",
+    },
+    deduct: {
+      title: "扣减重量",
+      currentWeight: "当前重量",
+      afterDeduction: "扣减后",
+      remaining: "剩余",
+      quickSelect: "快速选择",
+      deductAmount: "扣减数量（克）",
+      deductAmountPlaceholder: "输入要扣减的数量",
+      cancel: "取消",
+      confirm: "确认扣减",
+      quickDeduct: "快速扣减",
     }
   },
   es: {
@@ -258,6 +282,18 @@ const translations: Record<Language, Translation> = {
       currentWeight: "Peso Actual (g)",
       usageNotes: "Notas",
       usageNotesPlaceholder: "ej. Imprime mejor a 215°C...",
+    },
+    deduct: {
+      title: "Reducir Peso",
+      currentWeight: "Peso Actual",
+      afterDeduction: "Después de Reducción",
+      remaining: "Restante",
+      quickSelect: "Selección Rápida",
+      deductAmount: "Cantidad a Reducir (gramos)",
+      deductAmountPlaceholder: "Ingrese la cantidad a reducir",
+      cancel: "Cancelar",
+      confirm: "Reducir",
+      quickDeduct: "Reducción Rápida",
     }
   },
   de: {
@@ -344,6 +380,18 @@ const translations: Record<Language, Translation> = {
       currentWeight: "Aktuelles Gewicht (g)",
       usageNotes: "Nutzungshinweise",
       usageNotesPlaceholder: "z.B. Druckt am besten bei 215°C...",
+    },
+    deduct: {
+      title: "Gewicht Abziehen",
+      currentWeight: "Aktuelles Gewicht",
+      afterDeduction: "Nach Abzug",
+      remaining: "Verbleibend",
+      quickSelect: "Schnellauswahl",
+      deductAmount: "Abzugsbetrag (Gramm)",
+      deductAmountPlaceholder: "Abzugsbetrag eingeben",
+      cancel: "Abbrechen",
+      confirm: "Abziehen",
+      quickDeduct: "Schnell Abziehen",
     }
   }
 };

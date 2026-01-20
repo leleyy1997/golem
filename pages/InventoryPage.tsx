@@ -2,12 +2,15 @@ import React, { useState, useEffect } from 'react';
 import { useI18n } from '../i18n';
 import { FilamentStatus, Filament } from '../types';
 import FilamentModal from '../components/FilamentModal';
-import { fetchFilaments, createFilament, updateFilament as updateFilamentAPI } from '../lib/api';
+import DeductModal from '../components/DeductModal';
+import { fetchFilaments, createFilament, updateFilament as updateFilamentAPI, deductFilamentWeight } from '../lib/api';
 
 const InventoryPage = () => {
   const { t } = useI18n();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isDeductModalOpen, setIsDeductModalOpen] = useState(false);
   const [editingFilament, setEditingFilament] = useState<Filament | undefined>();
+  const [deductingFilament, setDeductingFilament] = useState<Filament | undefined>();
   const [filaments, setFilaments] = useState<Filament[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
@@ -65,6 +68,26 @@ const InventoryPage = () => {
   const handleCloseModal = () => {
     setIsModalOpen(false);
     setEditingFilament(undefined);
+  };
+
+  const handleDeduct = (filament: Filament) => {
+    setDeductingFilament(filament);
+    setIsDeductModalOpen(true);
+  };
+
+  const handleCloseDeductModal = () => {
+    setIsDeductModalOpen(false);
+    setDeductingFilament(undefined);
+  };
+
+  const handleConfirmDeduct = async (amount: number) => {
+    if (!deductingFilament) return;
+
+    const updated = await deductFilamentWeight(deductingFilament.id, amount);
+    if (updated) {
+      setFilaments(filaments.map(f => f.id === deductingFilament.id ? updated : f));
+    }
+    setDeductingFilament(undefined);
   };
 
   return (
@@ -232,6 +255,13 @@ const InventoryPage = () => {
                                     <td className="p-4">
                                         <div className="flex items-center justify-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                                             <button
+                                              onClick={() => handleDeduct(f)}
+                                              className="p-2 rounded-lg bg-white dark:bg-surface-dark border border-slate-200 dark:border-slate-600 flex items-center justify-center text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors shadow-sm"
+                                              title="Quick Deduct"
+                                            >
+                                                <span className="material-symbols-outlined text-[20px]">remove</span>
+                                            </button>
+                                            <button
                                               onClick={() => handleEdit(f)}
                                               className="p-2 rounded-lg bg-white dark:bg-surface-dark border border-slate-200 dark:border-slate-600 flex items-center justify-center text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors shadow-sm"
                                             >
@@ -256,6 +286,12 @@ const InventoryPage = () => {
         onClose={handleCloseModal}
         onSave={handleSaveFilament}
         filament={editingFilament}
+      />
+      <DeductModal
+        isOpen={isDeductModalOpen}
+        onClose={handleCloseDeductModal}
+        onDeduct={handleConfirmDeduct}
+        filament={deductingFilament}
       />
     </div>
   );

@@ -114,5 +114,17 @@ export interface Translation {
     currentWeight: string;
     usageNotes: string;
     usageNotesPlaceholder: string;
-  }
+  };
+  deduct: {
+    title: string;
+    currentWeight: string;
+    afterDeduction: string;
+    remaining: string;
+    quickSelect: string;
+    deductAmount: string;
+    deductAmountPlaceholder: string;
+    cancel: string;
+    confirm: string;
+    quickDeduct: string;
+  };
 }

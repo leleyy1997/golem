@@ -114,6 +114,43 @@ router.delete('/filaments/:id', authMiddleware, async (req, res) => {
   }
 });
 
+// POST /api/filaments/:id/deduct - 扣减耗材重量
+router.post('/filaments/:id/deduct', authMiddleware, async (req, res) => {
+  try {
+    const { amount } = req.body;
+
+    if (typeof amount !== 'number' || amount <= 0) {
+      return res.status(400).json({ success: false, error: 'Invalid deduction amount' });
+    }
+
+    // 获取当前耗材数据
+    const filament = await getFilamentById(req.params.id as string);
+    if (!filament) {
+      return res.status(404).json({ success: false, error: 'Filament not found' });
+    }
+
+    // 计算扣减后的重量
+    const newWeightRemaining = Math.max(0, filament.weightRemaining - amount);
+
+    if (newWeightRemaining > filament.weightTotal) {
+      return res.status(400).json({ success: false, error: 'Invalid weight calculation' });
+    }
+
+    // 更新耗材
+    const updatedFilament = await updateFilament(req.params.id as string, {
+      weightRemaining: newWeightRemaining
+    });
+
+    if (!updatedFilament) {
+      return res.status(500).json({ success: false, error: 'Failed to deduct weight' });
+    }
+
+    res.json({ success: true, data: updatedFilament });
+  } catch (error) {
+    res.status(500).json({ success: false, error: 'Failed to deduct weight' });
+  }
+});
+
 // ============ 设置相关路由 ============
 
 // GET /api/settings - 获取设置
