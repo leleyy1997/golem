@@ -24,9 +24,9 @@
 
 ## 📸 预览
 
-![预览图](https://github.com/leleyy1997/golem/blob/main/images/20260120161831.jpg)
-![预览图](https://github.com/leleyy1997/golem/blob/main/images/20260120161857.jpg)
-![预览图](https://github.com/leleyy1997/golem/blob/main/images/20260120161903.jpg)
+![预览图](https://github.com/leleyy1997/golem/blob/main/images/20260120161831.jpg?raw=true)
+![预览图](https://github.com/leleyy1997/golem/blob/main/images/20260120161857.jpg?raw=true)
+![预览图](https://github.com/leleyy1997/golem/blob/main/images/20260120161903.jpg?raw=true)
 
 ## 🛠 技术栈
 
