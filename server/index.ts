@@ -16,28 +16,34 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// 健康检查
+app.get('/health', (req, res) => {
+  res.json({ status: 'ok', timestamp: new Date().toISOString() });
+});
+
 // API 路由
 app.use('/api', routes);
 
 // 生产环境服务静态文件
 if (process.env.NODE_ENV === 'production') {
-  const distPath = path.join(__dirname, '../dist');
+  // __dirname 在编译后是 /app/dist-server/server
+  // 所以需要 ../../dist 才能到达 /app/dist
+  const distPath = path.join(__dirname, '../../dist');
+
+  // 静态文件服务
   app.use(express.static(distPath));
 
-  // 处理 SPA 路由
-  app.get(/.*/, (req, res) => {
-    // 如果请求的是 API，不要返回 HTML
+  // 处理 SPA 路由 - 捕获所有非静态文件的请求
+  app.use((req, res, next) => {
+    // 如果请求的是 API，跳过
     if (req.path.startsWith('/api')) {
-      return res.status(404).json({ success: false, error: 'Not Found' });
+      return next();
     }
+
+    // 发送 index.html
     res.sendFile(path.join(distPath, 'index.html'));
   });
 }
-
-// 健康检查
-app.get('/health', (req, res) => {
-  res.json({ status: 'ok', timestamp: new Date().toISOString() });
-});
 
 // 启动服务器
 async function startServer() {

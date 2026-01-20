@@ -8,19 +8,19 @@
  * 3. 为上层（路由层）提供简洁的 API
  */
 
-import { jsonStorage } from './repositories/json-storage.repository';
-import type { IStorageRepository } from './repositories/storage.interface';
+import { jsonStorage } from './repositories/json-storage.repository.js';
+import type { IStorageRepository } from './repositories/storage.interface.js';
 import {
   calculateFilamentStatus,
   applyStatusToFilaments,
   generateFilamentId,
   validateFilament
-} from './services/filament.service';
+} from './services/filament.service.js';
 import {
   DEFAULT_SETTINGS,
   mergeWithDefaults,
   validateSettings
-} from './services/settings.service';
+} from './services/settings.service.js';
 
 // 当前使用的存储实现（可以轻松切换到数据库实现）
 const storage: IStorageRepository = jsonStorage;

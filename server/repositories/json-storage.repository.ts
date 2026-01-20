@@ -6,7 +6,7 @@
 import fs from 'fs/promises';
 import fsSync from 'fs';
 import path from 'path';
-import type { IStorageRepository } from './storage.interface';
+import type { IStorageRepository } from './storage.interface.js';
 
 const DATA_DIR = process.env.DATA_DIR || path.join(process.cwd(), 'data');
 const FILAMENTS_FILE = path.join(DATA_DIR, 'filaments.json');

@@ -1,10 +1,43 @@
 import express from 'express';
-import { readFilaments, getFilamentById, addFilament, updateFilament, deleteFilament, readSettings, writeSettings } from './storage.js';
+import { readFilaments, getFilamentById, addFilament, updateFilament, deleteFilament, readSettings, writeSettings } from './storage-new.js';
 const router = express.Router();
+// 获取密码配置
+const getPassword = () => {
+    return process.env.APP_PASSWORD || 'golem';
+};
+// 认证中间件
+const authMiddleware = (req, res, next) => {
+    const token = req.headers.authorization?.replace('Bearer ', '');
+    if (!token || token !== getPassword()) {
+        return res.status(401).json({ success: false, error: 'Unauthorized' });
+    }
+    next();
+};
+// ============ 登录路由 ============
+// POST /api/login - 登录
+router.post('/login', (req, res) => {
+    const { password } = req.body;
+    if (!password) {
+        return res.status(400).json({ success: false, error: 'Password is required' });
+    }
+    if (password === getPassword()) {
+        res.json({
+            success: true,
+            data: {
+                token: password,
+                username: 'golem'
+            }
+        });
+    }
+    else {
+        res.status(401).json({ success: false, error: 'Invalid password' });
+    }
+});
+// ============ 耗材相关路由 (需要认证) ============
 // GET /api/filaments - 获取所有耗材
-router.get('/filaments', (req, res) => {
+router.get('/filaments', authMiddleware, async (req, res) => {
     try {
-        const filaments = readFilaments();
+        const filaments = await readFilaments();
         res.json({ success: true, data: filaments });
     }
     catch (error) {
@@ -12,9 +45,9 @@ router.get('/filaments', (req, res) => {
     }
 });
 // GET /api/filaments/:id - 获取单个耗材
-router.get('/filaments/:id', (req, res) => {
+router.get('/filaments/:id', authMiddleware, async (req, res) => {
     try {
-        const filament = getFilamentById(req.params.id);
+        const filament = await getFilamentById(req.params.id);
         if (!filament) {
             return res.status(404).json({ success: false, error: 'Filament not found' });
         }
@@ -25,9 +58,9 @@ router.get('/filaments/:id', (req, res) => {
     }
 });
 // POST /api/filaments - 添加新耗材
-router.post('/filaments', (req, res) => {
+router.post('/filaments', authMiddleware, async (req, res) => {
     try {
-        const filament = addFilament(req.body);
+        const filament = await addFilament(req.body);
         if (!filament) {
             return res.status(500).json({ success: false, error: 'Failed to create filament' });
         }
@@ -38,9 +71,9 @@ router.post('/filaments', (req, res) => {
     }
 });
 // PUT /api/filaments/:id - 更新耗材
-router.put('/filaments/:id', (req, res) => {
+router.put('/filaments/:id', authMiddleware, async (req, res) => {
     try {
-        const filament = updateFilament(req.params.id, req.body);
+        const filament = await updateFilament(req.params.id, req.body);
         if (!filament) {
             return res.status(404).json({ success: false, error: 'Filament not found' });
         }
@@ -51,9 +84,9 @@ router.put('/filaments/:id', (req, res) => {
     }
 });
 // DELETE /api/filaments/:id - 删除耗材
-router.delete('/filaments/:id', (req, res) => {
+router.delete('/filaments/:id', authMiddleware, async (req, res) => {
     try {
-        const success = deleteFilament(req.params.id);
+        const success = await deleteFilament(req.params.id);
         if (!success) {
             return res.status(404).json({ success: false, error: 'Filament not found' });
         }
@@ -65,9 +98,9 @@ router.delete('/filaments/:id', (req, res) => {
 });
 // ============ 设置相关路由 ============
 // GET /api/settings - 获取设置
-router.get('/settings', (req, res) => {
+router.get('/settings', authMiddleware, async (req, res) => {
     try {
-        const settings = readSettings();
+        const settings = await readSettings();
         res.json({ success: true, data: settings });
     }
     catch (error) {
@@ -75,13 +108,13 @@ router.get('/settings', (req, res) => {
     }
 });
 // POST /api/settings - 更新设置
-router.post('/settings', (req, res) => {
+router.post('/settings', authMiddleware, async (req, res) => {
     try {
-        const success = writeSettings(req.body);
+        const success = await writeSettings(req.body);
         if (!success) {
             return res.status(500).json({ success: false, error: 'Failed to save settings' });
         }
-        const settings = readSettings();
+        const settings = await readSettings();
         res.json({ success: true, data: settings });
     }
     catch (error) {

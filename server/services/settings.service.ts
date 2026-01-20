@@ -3,7 +3,7 @@
  * 业务逻辑层：处理设置相关的业务规则
  */
 
-import type { Settings } from '../../types';
+import type { Settings } from '../../types.js';
 
 /**
  * 默认设置配置

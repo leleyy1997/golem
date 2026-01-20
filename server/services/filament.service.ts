@@ -3,7 +3,7 @@
  * 业务逻辑层：处理耗材相关的业务规则和计算
  */
 
-import type { Settings } from '../../types';
+import type { Settings } from '../../types.js';
 
 /**
  * 根据剩余重量和总重量计算耗材状态
