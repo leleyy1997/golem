@@ -22,6 +22,12 @@
 - 🔐 环境变量配置支持
 - 🔄 热重载开发体验
 
+## 📸 预览
+
+![预览图](https://github.com/leleyy1997/golem/blob/main/images/20260120161831.jpg)
+![预览图](https://github.com/leleyy1997/golem/blob/main/images/20260120161857.jpg)
+![预览图](https://github.com/leleyy1997/golem/blob/main/images/20260120161903.jpg)
+
 ## 🛠 技术栈
 
 - **前端**: React 19, Vite 6, Tailwind CSS
@@ -42,10 +48,11 @@
 
 #### 启动步骤
 
-1. **克隆项目**
+1. **创建工作目录并下载配置文件**
+
    ```bash
-   git clone <repository-url>
-   cd filamenttracker
+   mkdir golem && cd golem
+   curl -o docker-compose.yml https://raw.githubusercontent.com/leleyy1997/golem/main/docker-compose.yml
    ```
 
 2. **配置环境变量（可选）**
@@ -62,16 +69,16 @@
    docker-compose up -d
    ```
 
-4. **查看服务状态**
+3. **查看服务状态**
    ```bash
    docker-compose ps
    ```
 
-5. **访问应用**
+4. **访问应用**
 
    应用将在 http://localhost:3001 启动
 
-6. **查看日志**
+5. **查看日志**
    ```bash
    # 查看所有日志
    docker-compose logs -f
