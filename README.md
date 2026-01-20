@@ -1,6 +1,6 @@
 <div align="center">
-  <h1>📦 FilamentTracker</h1>
-  <p>一个基于 Node.js 和 React 的现代化 Web 应用</p>
+  <h1>📦 Golem</h1>
+  <p>3D耗材管理后台</p>
 </div>
 
 ## 📋 目录
